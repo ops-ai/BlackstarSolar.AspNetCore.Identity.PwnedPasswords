@@ -8,18 +8,20 @@
 
     public class PwnedPasswordsValidator<TUser> : IPasswordValidator<TUser> where TUser : class
     {
-        private readonly HaveIBeenPwnedRestClient client = new HaveIBeenPwnedRestClient();
+        private readonly HaveIBeenPwnedRestClient client;
 
         private readonly PwnedPasswordsValidatorOptions options;
 
         public PwnedPasswordsValidator(IOptions<PwnedPasswordsValidatorOptions> options)
         {
             if (options == null)
-            {
                 throw new ArgumentNullException(nameof(options));
-            }
+            
+            if (string.IsNullOrEmpty(options.Value.ApiKey))
+                throw new ArgumentNullException(nameof(options.Value.ApiKey));
 
             this.options = options.Value;
+            client = new HaveIBeenPwnedRestClient(options.Value.ApiKey, options.Value.UserAgent);
         }
 
         public async Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user, string password)
