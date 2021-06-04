@@ -8,7 +8,7 @@ public class Startup
      public void ConfigureServices(IServiceCollection services)
      {
         services.AddIdentity<MyApplicationUser, IdentityRole>()
-            .AddPwnedPasswordsValidator<MyApplicationUser>();
+            .AddPwnedPasswordsValidator<MyApplicationUser>(options => options.ApiKey = "MyApiKey");
      }
 }
 ```
@@ -19,7 +19,7 @@ public class Startup
      public void ConfigureServices(IServiceCollection services)
      {
         services.AddIdentity<MyApplicationUser, IdentityRole>()
-            .AddPwnedPasswordsValidator<MyApplicationUser>(options => options.ErrorMessage = "Custom error message");
+            .AddPwnedPasswordsValidator<MyApplicationUser>(options => { options.ApiKey = "MyApiKey"; options.ErrorMessage = "Custom error message"; });
      }
 }
 ```
